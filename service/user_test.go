@@ -45,6 +45,17 @@ func TestUserService(t *testing.T) {
 	}
 }
 
+func TestUserManager(t *testing.T) {
+	BeforeEach()
+
+	var i interface{} = &userService
+	_, ok := i.(security.UserManager)
+
+	if !ok {
+		t.Fatalf("UserService must implement UserManager")
+	}
+}
+
 func TestGetNormal(t *testing.T) {
 	UserBeforeEach()
 
@@ -54,8 +65,8 @@ func TestGetNormal(t *testing.T) {
 		t.Fatalf("Mustn't return an error")
 	}
 
-	if reflect.DeepEqual(user, model.User{}) {
-		t.Fatalf("Must return an article")
+	if reflect.DeepEqual(user, security.User{}) {
+		t.Fatalf("Must return an user")
 	}
 }
 
@@ -68,8 +79,8 @@ func TestGetInvalidPasswordError(t *testing.T) {
 		t.Fatalf("Must return an error")
 	}
 
-	if !reflect.DeepEqual(user, model.User{}) {
-		t.Fatalf("Mustn't return an article")
+	if !reflect.DeepEqual(user, security.User{}) {
+		t.Fatalf("Mustn't return an user")
 	}
 }
 
@@ -82,8 +93,8 @@ func TestGetInvalidUserError(t *testing.T) {
 		t.Fatalf("Must return an error")
 	}
 
-	if !reflect.DeepEqual(user, model.User{}) {
-		t.Fatalf("Mustn't return an article")
+	if !reflect.DeepEqual(user, security.User{}) {
+		t.Fatalf("Mustn't return an user")
 	}
 }
 

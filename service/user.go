@@ -26,8 +26,8 @@ import (
 
 //IUserService interface
 type IUserService interface {
+	security.UserManager
 	GetByID(id string) (model.User, error)
-	Get(username string, password string) (model.User, error)
 	Add(user model.User) (model.User, error)
 	FindAll() ([]model.User, error)
 	Delete(user model.User) error
@@ -40,7 +40,7 @@ type UserService struct {
 }
 
 //Get retourne l'utilisateur si celui-ci existe
-func (u *UserService) Get(username string, password string) (user model.User, err error) {
+func (u *UserService) Get(username string, password string) (user security.User, err error) {
 	mongo := u.MongoService.Mongo.Copy()
 	defer mongo.Close()
 
@@ -48,17 +48,17 @@ func (u *UserService) Get(username string, password string) (user model.User, er
 	err = userCollection.Find(bson.M{"username": username}).One(&user)
 
 	if err != nil {
-		return model.User{}, err
+		return security.User{}, err
 	}
 
 	valid, err := security.CheckPassword([]byte(password), []byte(user.Salt), []byte(user.Password))
 	if err != nil {
-		return model.User{}, err
+		return security.User{}, err
 	}
 	if valid {
 		return user, nil
 	}
-	return model.User{}, errors.New("Invalid password")
+	return security.User{}, errors.New("Invalid password")
 }
 
 //GetByID retourne l'utilisateur d'après son ID
