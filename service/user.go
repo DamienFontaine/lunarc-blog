@@ -34,13 +34,13 @@ type IUserService interface {
 	Update(id string, user model.User) error
 }
 
-//Service works with User
-type Service struct {
+//UserService works with User
+type UserService struct {
 	MongoService mongo.Service
 }
 
 //Get retourne l'utilisateur si celui-ci existe
-func (u *Service) Get(username string, password string) (user model.User, err error) {
+func (u *UserService) Get(username string, password string) (user model.User, err error) {
 	mongo := u.MongoService.Mongo.Copy()
 	defer mongo.Close()
 
@@ -62,7 +62,7 @@ func (u *Service) Get(username string, password string) (user model.User, err er
 }
 
 //GetByID retourne l'utilisateur d'après son ID
-func (u *Service) GetByID(id string) (user model.User, err error) {
+func (u *UserService) GetByID(id string) (user model.User, err error) {
 	defer func() {
 		if r := recover(); r != nil {
 			err = errors.New("Incorrect ID")
@@ -83,7 +83,7 @@ func (u *Service) GetByID(id string) (user model.User, err error) {
 }
 
 //FindAll retourne tout les utilisateurs
-func (u *Service) FindAll() (users []model.User, err error) {
+func (u *UserService) FindAll() (users []model.User, err error) {
 	mongo := u.MongoService.Mongo.Copy()
 	defer mongo.Close()
 
@@ -98,7 +98,7 @@ func (u *Service) FindAll() (users []model.User, err error) {
 }
 
 //Add ajoute un nouvel utilisateur
-func (u *Service) Add(user model.User) (model.User, error) {
+func (u *UserService) Add(user model.User) (model.User, error) {
 	mongo := u.MongoService.Mongo.Copy()
 	defer mongo.Close()
 	id := bson.NewObjectId()
@@ -128,7 +128,7 @@ func (u *Service) Add(user model.User) (model.User, error) {
 }
 
 //Delete supprime un utilisateur
-func (u *Service) Delete(user model.User) (err error) {
+func (u *UserService) Delete(user model.User) (err error) {
 	mongo := u.MongoService.Mongo.Copy()
 	defer mongo.Close()
 	userCollection := mongo.Database.C("user")
@@ -137,7 +137,7 @@ func (u *Service) Delete(user model.User) (err error) {
 }
 
 //Update modifie un utilisateur existant
-func (u *Service) Update(id string, user model.User) (err error) {
+func (u *UserService) Update(id string, user model.User) (err error) {
 	defer func() {
 		if r := recover(); r != nil {
 			err = errors.New("Incorrect ID")

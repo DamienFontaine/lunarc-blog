@@ -27,11 +27,11 @@ import (
 	"github.com/DamienFontaine/lunarc/security"
 )
 
-var userService Service
+var userService UserService
 
 func UserBeforeEach() {
 	m, _ := mongo.NewMongo("config.yml", "staging")
-	userService = Service{MongoService: mongo.Service{Mongo: *m}}
+	userService = UserService{MongoService: mongo.Service{Mongo: *m}}
 }
 
 func TestUserService(t *testing.T) {
